@@ -13,7 +13,7 @@ GPIO_ECHO = 24
 #set GPIO direction (IN / OUT)
 GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
 GPIO.setup(GPIO_ECHO, GPIO.IN)
- 
+global i
 def distance():
     print ("At starting of the function")
     # set Trigger to HIGH
@@ -42,7 +42,7 @@ def distance():
     print ("At end of the distance")
  
     return distance
-def sendemail():
+def sendemail(i):
     
     server = smtplib.SMTP_SSL('smtp.zoho.com', port=465)
     print("Server Started...")
@@ -50,7 +50,8 @@ def sendemail():
     print("Server Login Successful")
     msg ="""From:satishreddym@zoho.com\nTo:satish.reddy617@gmail.com\nSubject: Alert Email\n
    """
-    msg = msg+"Yay!! It's working"
+    numb=str(i)
+    msg = msg+" Warning No:"+numb+"Quantity below the Threshold level for Warning 1"+numb
 
     try:
         server.sendmail('satishreddym@zoho.com','satish.reddy617@gmail.com',msg)
@@ -64,15 +65,18 @@ def sendemail():
 if __name__ == '__main__':
     try:
         print ("Program is executing")
+        i=1
         while 1:
             print ("Inside while loop")
             dist = distance()
             print ("Measured Distance = %.1f cm" % dist)
             time.sleep(1)
-            if dist>7:
+
+            if dist>7 and abs(dist1-dist)>1:
                 print("Inside Sending Email if")
-                sendemail()
- 
+                sendemail(i)
+                i=i+1
+                dist1=dist
         # Reset by pressing CTRL + C
     except KeyboardInterrupt:
         print("Measurement stopped by User")
