@@ -2,7 +2,14 @@
 import RPi.GPIO as GPIO
 import time
 import smtplib
- 
+import urllib2
+
+#Things Speak API Key
+myAPI = '9NZUVOA1794DLDIQ' 
+
+#Things Speak URL where we will send the data.
+baseURL = 'https://api.thingspeak.com/update?api_key=%s' % myAPI
+
 #GPIO Mode (BOARD / BCM)
 GPIO.setmode(GPIO.BCM)
  
@@ -14,6 +21,7 @@ GPIO_ECHO = 24
 GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
 GPIO.setup(GPIO_ECHO, GPIO.IN)
 global i
+global dist1
 def distance():
     print ("At starting of the function")
     # set Trigger to HIGH
@@ -61,7 +69,12 @@ def sendemail(i):
     print("Sending Message...")
     server.quit()
     print("Quit Server")
- 
+    # Sending the data to thingspeak
+    conn = urllib2.urlopen(baseURL + '&field1=%s' % (i))
+    print conn.read()
+    # Closing the connection
+    conn.close()
+dist1=0 
 if __name__ == '__main__':
     try:
         print ("Program is executing")
@@ -71,7 +84,6 @@ if __name__ == '__main__':
             dist = distance()
             print ("Measured Distance = %.1f cm" % dist)
             time.sleep(1)
-
             if dist>7 and abs(dist1-dist)>1:
                 print("Inside Sending Email if")
                 sendemail(i)
