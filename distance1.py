@@ -69,7 +69,7 @@ def sendemail(i):
     print("Sending Message...")
     server.quit()
     print("Quit Server")
-    # Sending the data to thingspeak
+    # Sending the data to thingsSpeak
     conn = urllib2.urlopen(baseURL + '&field1=%s' % (i))
     print conn.read()
     # Closing the connection
@@ -83,7 +83,9 @@ if __name__ == '__main__':
             print ("Inside while loop")
             dist = distance()
             print ("Measured Distance = %.1f cm" % dist)
-            time.sleep(1)
+			# Sending the data to thingsSpeak
+			conn = urllib2.urlopen(baseURL + '&field2=%s' % (dist))
+            time.sleep(20)
             if dist>7 and abs(dist1-dist)>1:
                 print("Inside Sending Email if")
                 sendemail(i)
